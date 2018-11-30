@@ -89,6 +89,11 @@ struct ldupes_error ldupes_find_duplicates(struct ldupes_context *context, char 
 
     struct file_list file_list;
     struct ldupes_error err = find_files(&file_list, fd, dirname);
+    if (err.type != ldupes_ERR_OK) {
+        close(fd);
+        return err;
+    }
+
     close(fd);
     return err;
 }
