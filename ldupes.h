@@ -1,7 +1,5 @@
 #pragma once
 
-#include "rbtree.h" // rb_root
-
 struct ldupes_error {
     enum {
         ldupes_ERR_OK,
@@ -13,7 +11,6 @@ struct ldupes_error {
 };
 
 struct ldupes_context {
-    struct rb_root cluster_tree;
 };
 
 void ldupes_context_init(struct ldupes_context *context);

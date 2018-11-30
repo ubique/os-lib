@@ -1,19 +1,17 @@
 #include "ldupes.h"
-#include "cluster_node.h"
 #include "file_list.h"
 
-#include "rbtree.h"
 #include <assert.h>
-#include <dirent.h>
-#include <fcntl.h>
+#include <dirent.h> // opendir
+#include <fcntl.h>  // openat, fstatat
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> // malloc
 #include <string.h>
 #include <sys/stat.h>
-#include <unistd.h>
+#include <unistd.h> // close
 
-void ldupes_context_init(struct ldupes_context *context) { context->cluster_tree = RB_ROOT; }
+void ldupes_context_init(struct ldupes_context *context) { assert(context); }
 
 bool is_dir(struct stat stbuf) { return (stbuf.st_mode & S_IFMT) == S_IFDIR; }
 
@@ -21,18 +19,6 @@ bool is_symlink(struct stat stbuf) { return (stbuf.st_mode & S_IFMT) == S_IFLNK;
 
 bool should_skip(char const *dirname) {
     return (strcmp(dirname, ".") == 0) || (strcmp(dirname, "..") == 0);
-}
-
-void distribute_to_cluster(struct ldupes_context *context, size_t file_size,
-                           char const *file_path) {
-    struct rb_root root       = context->cluster_tree;
-    struct cluster_node *node = cluster_node_search(&root, file_size);
-    if (node) {
-        file_list_add(&node->file_list, file_path);
-    } else {
-        node = cluster_node_create(file_size, file_path);
-        cluster_node_insert(&context->cluster_tree, node);
-    }
 }
 
 struct ldupes_error find_files(struct file_list *file_list, int dir_fd, char const *dir_path) {

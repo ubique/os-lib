@@ -1,6 +1,6 @@
 #include "file_list.h"
 
-#include <stdlib.h>
+#include <stdlib.h> // malloc
 
 #ifdef __STDC_ALLOC_LIB__ // needed for dynamic memory TR
 #define __STDC_WANT_LIB_EXT2__ 1
