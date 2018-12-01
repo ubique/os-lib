@@ -1,5 +1,7 @@
 #include "ldupes.h"
-#include "file_list.h"
+#include "aux.h"
+#include "duplicates_tree.h"
+#include "ldupes_list.h"
 
 #include <assert.h>
 #include <dirent.h> // opendir
@@ -21,13 +23,10 @@ bool should_skip(char const *dirname) {
     return (strcmp(dirname, ".") == 0) || (strcmp(dirname, "..") == 0);
 }
 
-struct ldupes_error find_files(struct file_list *file_list, int dir_fd, char const *dir_path) {
-    /* fprintf(stderr, "%s\n", dir_path); */
+struct ldupes_error find_files(struct ldupes_list *file_list, int dir_fd, char const *dir_path) {
     DIR *dir_stream;
     if ((dir_stream = fdopendir(dir_fd)) == NULL) {
-        closedir(dir_stream);
-        struct ldupes_error err = {.type = ldupes_ERR_CANT_ACCESS, .message = NULL};
-        return err;
+        return (struct ldupes_error){.type = ldupes_ERR_CANT_ACCESS, .message = NULL};
     }
 
     struct dirent *child;
@@ -40,9 +39,8 @@ struct ldupes_error find_files(struct file_list *file_list, int dir_fd, char con
         size_t child_len    = strlen(child->d_name);
         char *new_path      = malloc(dir_path_len + child_len + 2);
         if (new_path == NULL) {
-            struct ldupes_error err = {.type = ldupes_ERR_OUT_OF_MEMORY};
             closedir(dir_stream);
-            return err;
+            return OOM;
         }
 
         memcpy(new_path, dir_path, dir_path_len);
@@ -61,39 +59,45 @@ struct ldupes_error find_files(struct file_list *file_list, int dir_fd, char con
         } else if (is_symlink(child_stbuf)) {
             // ignore for now, TODO maybe add flag for later
         } else {
-            file_list_add(file_list, new_path);
+            ldupes_list_add(file_list, new_path, (size_t)child_stbuf.st_size);
         }
         free(new_path);
     }
     closedir(dir_stream);
-    struct ldupes_error err = {.type = ldupes_ERR_OK};
-    return err;
+    return OK;
 }
 
 struct ldupes_error ldupes_find_duplicates(struct ldupes_context *context, char const *dirname) {
-    assert(context && "Context is NULL");
+    assert(context && "Context is NULL"); // TODO return error
     int fd = open(dirname, O_RDONLY);
 
     struct stat stbuf;
     if (fstat(fd, &stbuf) == -1) {
         close(fd);
-        struct ldupes_error err = {.type = ldupes_ERR_CANT_ACCESS, .message = dirname};
-        return err;
+        return (struct ldupes_error){.type = ldupes_ERR_CANT_ACCESS, .message = dirname};
     }
 
     if (!is_dir(stbuf)) {
         close(fd);
-        struct ldupes_error err = {.type = ldupes_ERR_NOT_DIRECTORY, .message = dirname};
-        return err;
+        return (struct ldupes_error){.type = ldupes_ERR_NOT_DIRECTORY, .message = dirname};
     }
 
-    struct file_list file_list;
-    struct ldupes_error err = find_files(&file_list, fd, dirname);
+    struct ldupes_list file_list = {0};
+    struct ldupes_error err      = find_files(&file_list, fd, dirname);
     if (err.type != ldupes_ERR_OK) {
         close(fd);
         return err;
     }
 
+    struct duplicates_tree duplicates_tree = {0};
+    for (struct ldupes_list_node *it = file_list.node; it; it = it->next) {
+        err = duplicates_tree_add(&duplicates_tree, &it->file);
+        if (err.type != ldupes_ERR_OK) {
+            close(fd);
+            return err;
+        }
+    }
+
     close(fd);
-    return err;
+    return OK;
 }
