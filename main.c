@@ -1,11 +1,56 @@
 #include "ldupes.h"
 
-int main(int argc, char *argv[]) {
-    struct ldupes_context context;
-    ldupes_context_init(&context);
-    if (argc == 1) {
-        ldupes_find_duplicates(&context, ".");
-    } else {
-        ldupes_find_duplicates(&context, argv[1]);
+#include <inttypes.h> // uint64_t
+#include <stdio.h>    // snprintf
+#include <string.h>   // strcup
+
+#define DIM(x) (sizeof(x) / sizeof(*(x)))
+
+const char *sizes[]      = {"GiB", "MiB", "KiB", "B"};
+const uint64_t gibibytes = 1024ULL * 1024ULL * 1024ULL;
+
+char *calculate_size(size_t size_in_bytes) {
+    char *result        = malloc(sizeof(char) * 20);
+    uint64_t multiplier = gibibytes;
+
+    for (size_t i = 0; i < DIM(sizes); i++, multiplier /= 1024) {
+        if (size_in_bytes < multiplier) {
+            continue;
+        }
+        if (size_in_bytes % multiplier == 0) {
+            snprintf(result, 20, "%" PRIu64 " %s", size_in_bytes / multiplier, sizes[i]);
+        } else {
+            snprintf(result, 20, "%.1lf %s", (double)size_in_bytes / multiplier, sizes[i]);
+        }
+        return result;
     }
+    strcpy(result, "0");
+    return result;
+}
+
+int main(int argc, char *argv[]) {
+    char const *dirname = argc == 1 ? "." : argv[1];
+    struct ld_context context;
+    ld_context_init(&context, dirname);
+    unsigned duplicates_count = 0, sets_count = 0;
+    uint64_t total_size = 0;
+    while (true) {
+        struct ld_error err = ld_next_duplicate(&context);
+        if (err.type == ld_ERR_OK) {
+            ++sets_count;
+            struct ld_ranked_list_entry *it;
+            SLIST_FOREACH(it, &context.dups_list, entries) {
+                ++duplicates_count;
+                total_size += context.dups_list.file_size;
+            }
+            --duplicates_count, total_size -= context.dups_list.file_size;
+            LD_RANKED_LIST_CLEAR(&context.dups_list);
+        } else {
+            break;
+        }
+    }
+    char *size_presentation = calculate_size(total_size);
+    printf("%u duplicates found (in %u sets), occupying %s\n", duplicates_count, sets_count, size_presentation);
+    free(size_presentation);
+    ld_context_clear(&context);
 }
