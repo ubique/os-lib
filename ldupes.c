@@ -1,7 +1,7 @@
 #include "ldupes.h"
 #include "aux.h"
-#include "duplicates_tree.h"
-#include "ldupes_list.h"
+#include "ld_duplicates_tree.h"
+#include "ld_ranked_list.h"
 
 #include <assert.h>
 #include <dirent.h> // opendir
@@ -9,24 +9,34 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h> // malloc
-#include <string.h>
+
+#include <string.h> // strcmp
 #include <sys/stat.h>
 #include <unistd.h> // close
-
-void ldupes_context_init(struct ldupes_context *context) { assert(context); }
-
-bool is_dir(struct stat stbuf) { return (stbuf.st_mode & S_IFMT) == S_IFDIR; }
-
-bool is_symlink(struct stat stbuf) { return (stbuf.st_mode & S_IFMT) == S_IFLNK; }
 
 bool should_skip(char const *dirname) {
     return (strcmp(dirname, ".") == 0) || (strcmp(dirname, "..") == 0);
 }
 
-struct ldupes_error find_files(struct ldupes_list *file_list, int dir_fd, char const *dir_path) {
+char *concat_path(char const *dir_path, char const *child_name) {
+    size_t dir_path_len = strlen(dir_path);
+    size_t child_len    = strlen(child_name);
+    char *new_path      = malloc(dir_path_len + child_len + 2);
+    if (new_path == NULL) {
+        return NULL;
+    }
+
+    memcpy(new_path, dir_path, dir_path_len);
+    new_path[dir_path_len] = '/';
+    memcpy(new_path + dir_path_len + 1, child_name, child_len);
+    new_path[dir_path_len + child_len + 1] = '\0';
+    return new_path;
+}
+
+struct ld_error find_files(struct ld_context *context, struct file_list *file_list, int dir_fd, char const *dir_path) {
     DIR *dir_stream;
     if ((dir_stream = fdopendir(dir_fd)) == NULL) {
-        return (struct ldupes_error){.type = ldupes_ERR_CANT_ACCESS, .message = NULL};
+        return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = NULL};
     }
 
     struct dirent *child;
@@ -35,69 +45,126 @@ struct ldupes_error find_files(struct ldupes_list *file_list, int dir_fd, char c
             continue;
         }
 
-        size_t dir_path_len = strlen(dir_path);
-        size_t child_len    = strlen(child->d_name);
-        char *new_path      = malloc(dir_path_len + child_len + 2);
-        if (new_path == NULL) {
-            closedir(dir_stream);
-            return OOM;
-        }
-
-        memcpy(new_path, dir_path, dir_path_len);
-        new_path[dir_path_len] = '/';
-        memcpy(new_path + dir_path_len + 1, child->d_name, child_len);
-        new_path[dir_path_len + child_len + 1] = '\0';
-
         struct stat child_stbuf;
         fstatat(dir_fd, child->d_name, &child_stbuf, AT_SYMLINK_NOFOLLOW);
         // TODO maybe add flag for folowing symlinks ^^^
 
-        if (is_dir(child_stbuf)) {
-            int child_fd = openat(dir_fd, child->d_name, O_RDONLY | O_DIRECTORY);
-            find_files(file_list, child_fd, new_path);
+        if (S_ISREG(child_stbuf.st_mode)) {
+            if ((size_t)child_stbuf.st_size < context->min_file_size) {
+                continue;
+            }
+            char *new_path = concat_path(dir_path, child->d_name);
+            if (!new_path) {
+                closedir(dir_stream);
+                return OOM;
+            }
+            struct file_list_entry *entry = malloc(sizeof(struct file_list_entry));
+            entry->file                   = (struct ld_file){.path = new_path, .has_hash = false}; // takes ownership of new_path
+            entry->file_size              = (size_t)child_stbuf.st_size;
+            SLIST_INSERT_HEAD(file_list, entry, entries); // takes ownership of entry
+        } else if (S_ISDIR(child_stbuf.st_mode)) {
+            int child_fd   = openat(dir_fd, child->d_name, O_RDONLY | O_DIRECTORY);
+            char *new_path = concat_path(dir_path, child->d_name);
+            if (!new_path) {
+                close(child_fd);
+                closedir(dir_stream);
+                return OOM;
+            }
+            find_files(context, file_list, child_fd, new_path);
+            free(new_path);
             close(child_fd);
-        } else if (is_symlink(child_stbuf)) {
-            // ignore for now, TODO maybe add flag for later
-        } else {
-            ldupes_list_add(file_list, new_path, (size_t)child_stbuf.st_size);
         }
-        free(new_path);
     }
     closedir(dir_stream);
     return OK;
 }
 
-struct ldupes_error ldupes_find_duplicates(struct ldupes_context *context, char const *dirname) {
-    assert(context && "Context is NULL"); // TODO return error
-    int fd = open(dirname, O_RDONLY);
+bool is_small(struct rb_node *it) {
+    assert(it);
+    struct ld_duplicates_tree_node *container = container_of(it, struct ld_duplicates_tree_node, node);
+    return LD_RANKED_LIST_SMALL(container);
+}
 
-    struct stat stbuf;
-    if (fstat(fd, &stbuf) == -1) {
-        close(fd);
-        return (struct ldupes_error){.type = ldupes_ERR_CANT_ACCESS, .message = dirname};
+struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ranked_list *dups) {
+    assert(*node);
+    struct rb_node *nontrivial_node = &(*node)->node;
+    while (nontrivial_node && is_small(nontrivial_node)) {
+        nontrivial_node = rb_next(nontrivial_node);
+    }
+    if (!nontrivial_node) {
+        return EOI;
     }
 
-    if (!is_dir(stbuf)) {
-        close(fd);
-        return (struct ldupes_error){.type = ldupes_ERR_NOT_DIRECTORY, .message = dirname};
-    }
-
-    struct ldupes_list file_list = {0};
-    struct ldupes_error err      = find_files(&file_list, fd, dirname);
-    if (err.type != ldupes_ERR_OK) {
-        close(fd);
-        return err;
-    }
-
-    struct duplicates_tree duplicates_tree = {0};
-    for (struct ldupes_list_node *it = file_list.node; it; it = it->next) {
-        err = duplicates_tree_add(&duplicates_tree, &it->file);
-        if (err.type != ldupes_ERR_OK) {
-            close(fd);
+    *node                           = container_of(nontrivial_node, struct ld_duplicates_tree_node, node);
+    struct ld_ranked_list_entry *it = SLIST_FIRST(*node);
+    dups->file_size                 = (*node)->file_size;
+    SLIST_REMOVE_HEAD(*node, entries);
+    SLIST_INSERT_HEAD(dups, it, entries); // takes ownership
+    it = SLIST_FIRST(*node);
+    while (it) {
+        struct ld_ranked_list_entry *next = SLIST_NEXT(it, entries);
+        bool are_duplicates;
+        struct ld_error err = check_if_duplicates(&it->file, &SLIST_FIRST(dups)->file, &are_duplicates);
+        if (err.type != ld_ERR_OK) {
             return err;
         }
+        if (are_duplicates) {
+            SLIST_REMOVE(*node, it, ld_ranked_list_entry, entries);
+            SLIST_INSERT_HEAD(dups, it, entries); // takes ownership
+        }
+        it = next;
+    }
+    if (LD_RANKED_LIST_SMALL(dups)) {
+        LD_RANKED_LIST_CLEAR(dups);
+        return process_node(node, dups);
+    }
+    return OK;
+}
+
+struct ld_error ld_next_duplicate(struct ld_context *context) {
+    assert(context && "Context is NULL"); // TODO return error
+
+    if (RB_EMPTY_ROOT(&context->duplicates_tree.root)) {
+        int fd = open(context->dirname, O_RDONLY);
+
+        struct stat stbuf;
+        if (fstat(fd, &stbuf) == -1) {
+            close(fd);
+            return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = context->dirname};
+        }
+
+        if (!S_ISDIR(stbuf.st_mode)) {
+            close(fd);
+            return (struct ld_error){.type = ld_ERR_NOT_DIRECTORY, .message = context->dirname};
+        }
+
+        struct file_list file_list = SLIST_HEAD_INITIALIZER(file_list);
+
+        char const *dirname = context->dirname;
+        struct ld_error err = find_files(context, &file_list, fd, dirname);
+        close(fd);
+        if (err.type != ld_ERR_OK) {
+            file_list_clear(&file_list);
+            return err;
+        }
+
+        while (!SLIST_EMPTY(&file_list)) {
+            struct file_list_entry *first = SLIST_FIRST(&file_list);
+            SLIST_REMOVE_HEAD(&file_list, entries);
+            err = add_to_tree(&context->duplicates_tree, &first->file, first->file_size);
+            free(first);
+            if (err.type != ld_ERR_OK) {
+                file_list_clear(&file_list);
+                return err;
+            }
+        }
+        context->current_node = find_first_node(&context->duplicates_tree);
     }
 
-    close(fd);
-    return OK;
+    if (!context->current_node) {
+        return EOI;
+    }
+
+    struct ld_error err = process_node(&context->current_node, &context->dups_list);
+    return err;
 }

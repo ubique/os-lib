@@ -1,10 +1,6 @@
 #pragma once
 
-#include "ldupes_error.h"
+#include "ld_context.h"
+#include "ld_error.h"
 
-struct ldupes_context {
-};
-
-void ldupes_context_init(struct ldupes_context *context);
-
-struct ldupes_error ldupes_find_duplicates(struct ldupes_context *, char const *dirname);
+struct ld_error ld_next_duplicate(struct ld_context *context);
