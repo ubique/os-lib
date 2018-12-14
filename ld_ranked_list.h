@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "ld_error.h"
 #include "ld_file.h"
 
@@ -33,12 +38,17 @@ struct ld_ranked_list {
         }                                                           \
     } while (0)
 
-static inline void ld_ranked_list_entry_destroy(struct ld_ranked_list_entry *this) {
-    if (!this) {
+static inline void ld_ranked_list_entry_destroy(struct ld_ranked_list_entry *cthis) {
+    if (!cthis) {
         return;
     }
-    ld_file_clear(&this->file);
-    free(this);
+    ld_file_clear(&cthis->file);
+    free(cthis);
 }
 
 #define LD_RANKED_LIST_SMALL(head) (SLIST_EMPTY(head) || SLIST_NEXT(SLIST_FIRST(head), entries) == NULL)
+
+
+#ifdef __cplusplus
+}
+#endif

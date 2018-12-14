@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "ld_error.h"
 
 #include <stdbool.h>
@@ -11,6 +16,11 @@ struct ld_file {
     bool has_hash;
 };
 
-static inline void ld_file_clear(struct ld_file *this) {
-    free(this->path);
+static inline void ld_file_clear(struct ld_file *cthis) {
+    free(cthis->path);
 }
+
+
+#ifdef __cplusplus
+}
+#endif
