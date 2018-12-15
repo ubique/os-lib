@@ -9,5 +9,5 @@ struct ld_error {
         ld_ERR_END_OF_ITERATION,
         ld_ERR_HASHING_ERROR,
     } type;
-    char const *message;
+    char *message;
 };
