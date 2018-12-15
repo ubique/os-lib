@@ -127,10 +127,10 @@ clean_reader1:
 struct ld_error check_if_duplicates(struct ld_file *file1, struct ld_file *file2, bool *result) {
     assert(file1 && file2);
     if (!file1->has_hash) {
-        compute_hash(file1);
+        compute_hash(file1); // TODO put errors to sink
     }
     if (!file2->has_hash) {
-        compute_hash(file2);
+        compute_hash(file2); // TODO put errors to sink
     }
     if (file1->hash != file2->hash) {
         *result = false;
@@ -139,6 +139,13 @@ struct ld_error check_if_duplicates(struct ld_file *file1, struct ld_file *file2
     return equal_contents(file1, file2, result); // TODO optimize hashing with contents compare
 }
 
+/**
+ * @brief add_to_tree
+ * @param tree
+ * @param file
+ * @param file_size
+ * @return OK or OOM
+ */
 struct ld_error add_to_tree(struct ld_duplicates_tree *tree, struct ld_file *file, size_t file_size) {
     assert(file);
     struct rb_node **new = &(tree->root.rb_node), *parent = NULL;

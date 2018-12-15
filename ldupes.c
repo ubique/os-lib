@@ -36,7 +36,7 @@ char *concat_path(char const *dir_path, char const *child_name) {
 struct ld_error find_files(struct ld_context *context, struct file_list *file_list, int dir_fd, char const *dir_path) {
     DIR *dir_stream;
     if ((dir_stream = fdopendir(dir_fd)) == NULL) {
-        return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = NULL};
+        return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = strdup(dir_path)};
     }
 
     struct dirent *child;
@@ -70,9 +70,14 @@ struct ld_error find_files(struct ld_context *context, struct file_list *file_li
                 closedir(dir_stream);
                 return OOM;
             }
-            find_files(context, file_list, child_fd, new_path);
+            struct ld_error err = find_files(context, file_list, child_fd, new_path);
             free(new_path);
             close(child_fd);
+            if (err.type == ld_ERR_OUT_OF_MEMORY) {
+                close(child_fd);
+                closedir(dir_stream);
+                return err;
+            }
         }
     }
     closedir(dir_stream);
@@ -105,6 +110,11 @@ struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ra
         struct ld_ranked_list_entry *next = SLIST_NEXT(it, entries);
         bool are_duplicates;
         struct ld_error err = check_if_duplicates(&it->file, &SLIST_FIRST(dups)->file, &are_duplicates);
+        if (err.type == ld_ERR_CANT_ACCESS) {
+            // TODO put errors to sink
+            it = next;
+            continue;
+        }
         if (err.type != ld_ERR_OK) {
             return err;
         }
@@ -140,12 +150,12 @@ struct ld_error ld_next_duplicate(struct ld_context *context) {
         struct stat stbuf;
         if (fstat(fd, &stbuf) == -1) {
             close(fd);
-            return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = context->dirname};
+            return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = strdup(context->dirname)};
         }
 
         if (!S_ISDIR(stbuf.st_mode)) {
             close(fd);
-            return (struct ld_error){.type = ld_ERR_NOT_DIRECTORY, .message = context->dirname};
+            return (struct ld_error){.type = ld_ERR_NOT_DIRECTORY};
         }
 
         struct file_list file_list = SLIST_HEAD_INITIALIZER(file_list);
