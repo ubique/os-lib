@@ -20,6 +20,7 @@ struct ld_error ld_context_init(struct ld_context *this, char const *dirname) {
     this->duplicates_tree.root = RB_ROOT;
     this->current_node         = NULL;
     SLIST_INIT(&this->dups_list);
+    this->cancelled = NULL;
 
     this->min_file_size = 16;
     return OK;

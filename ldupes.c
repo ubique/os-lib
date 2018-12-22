@@ -33,7 +33,11 @@ char *concat_path(char const *dir_path, char const *child_name) {
     return new_path;
 }
 
-struct ld_error find_files(struct ld_context *context, struct file_list *file_list, int dir_fd, char const *dir_path) {
+struct ld_error gather_files(struct ld_context *context, struct file_list *file_list, int dir_fd, char const *dir_path) {
+    if (context->cancelled && *context->cancelled) {
+        return CANCEL;
+    }
+
     DIR *dir_stream;
     if ((dir_stream = fdopendir(dir_fd)) == NULL) {
         return (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = strdup(dir_path)};
@@ -70,10 +74,10 @@ struct ld_error find_files(struct ld_context *context, struct file_list *file_li
                 closedir(dir_stream);
                 return OOM;
             }
-            struct ld_error err = find_files(context, file_list, child_fd, new_path);
+            struct ld_error err = gather_files(context, file_list, child_fd, new_path);
             free(new_path);
             close(child_fd);
-            if (err.type == ld_ERR_OUT_OF_MEMORY) {
+            if (err.type == ld_ERR_OUT_OF_MEMORY || err.type == ld_ERR_CANCELLED) {
                 close(child_fd);
                 closedir(dir_stream);
                 return err;
@@ -90,7 +94,7 @@ bool is_small(struct rb_node *it) {
     return LD_RANKED_LIST_SMALL(container);
 }
 
-struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ranked_list *dups) {
+struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ranked_list *dups, atomic_bool const *cancelled) {
     assert(*node);
     struct rb_node *nontrivial_node = &(*node)->node;
     while (nontrivial_node && is_small(nontrivial_node)) {
@@ -109,7 +113,7 @@ struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ra
     while (it) {
         struct ld_ranked_list_entry *next = SLIST_NEXT(it, entries);
         bool are_duplicates;
-        struct ld_error err = check_if_duplicates(&it->file, &SLIST_FIRST(dups)->file, &are_duplicates);
+        struct ld_error err = check_if_duplicates(&it->file, &SLIST_FIRST(dups)->file, cancelled, &are_duplicates);
         if (err.type == ld_ERR_CANT_ACCESS) {
             // TODO put errors to sink
             it = next;
@@ -126,7 +130,7 @@ struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ra
     }
     if (LD_RANKED_LIST_SMALL(dups)) {
         LD_RANKED_LIST_CLEAR(dups);
-        return process_node(node, dups);
+        return process_node(node, dups, cancelled);
     }
     return OK;
 }
@@ -136,6 +140,7 @@ struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ra
  * @param context
  * @return ld_ERR_OK if next duplicate group is successfully found;
  * ld_END_OF_ITERATION if there are no more duplicates;
+ * ld_CANCELLED if file gathering was cancelled from another thread;
  * ld_CANT_ACCESS if some error occurred when working with files, in this case ld_error.message is set to the name of the said file;
  * ld_NOT_DIRECTORY if context.dirname is not in fact a directory;
  * ld_ERR_OUT_OF_MEMORY;
@@ -161,7 +166,7 @@ struct ld_error ld_next_duplicate(struct ld_context *context) {
         struct file_list file_list = SLIST_HEAD_INITIALIZER(file_list);
 
         char const *dirname = context->dirname;
-        struct ld_error err = find_files(context, &file_list, fd, dirname);
+        struct ld_error err = gather_files(context, &file_list, fd, dirname);
         close(fd);
         if (err.type != ld_ERR_OK) {
             file_list_clear(&file_list);
@@ -169,6 +174,10 @@ struct ld_error ld_next_duplicate(struct ld_context *context) {
         }
 
         while (!SLIST_EMPTY(&file_list)) {
+            if (context->cancelled && *context->cancelled) {
+                file_list_clear(&file_list);
+                return CANCEL;
+            }
             struct file_list_entry *first = SLIST_FIRST(&file_list);
             SLIST_REMOVE_HEAD(&file_list, entries);
             err = add_to_tree(&context->duplicates_tree, &first->file, first->file_size);
@@ -185,6 +194,6 @@ struct ld_error ld_next_duplicate(struct ld_context *context) {
         return EOI;
     }
 
-    struct ld_error err = process_node(&context->current_node, &context->dups_list);
+    struct ld_error err = process_node(&context->current_node, &context->dups_list, context->cancelled);
     return err;
 }

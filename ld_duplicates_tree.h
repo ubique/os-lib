@@ -4,7 +4,6 @@
 extern "C" {
 #endif
 
-
 #include "ld_error.h"
 #include "ld_ranked_list.h"
 #include "rbtree.h"
@@ -22,7 +21,6 @@ struct ld_duplicates_tree_node {
 };
 
 void ld_duplicates_tree_clear(struct ld_duplicates_tree *);
-
 
 #ifdef __cplusplus
 }
