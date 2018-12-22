@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_C_STANDARD 11)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -g")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address,undefined")
 
 add_library(ldupes SHARED
         ldupes.h ldupes.c
@@ -18,6 +19,11 @@ add_library(ldupes SHARED
         xxhash.h xxhash.c
         )
 
+add_library(atomics SHARED
+        atomics.h)
+set_target_properties(atomics PROPERTIES LINKER_LANGUAGE C)
+
 add_executable(ldupes_testing main.c)
 
+target_link_libraries(ldupes atomics)
 target_link_libraries(ldupes_testing ldupes)

@@ -3,6 +3,7 @@
 
 #include "rbtree.h"
 #include "xxhash.h"
+#include "atomics.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -35,7 +36,7 @@ void file_reader_next_chunk(struct file_reader *this) {
     this->read_count = fread(this->chunk, 1, sizeof(this->chunk), this->fstream);
 }
 
-struct ld_error compute_hash(struct ld_file *this) {
+struct ld_error compute_hash(struct ld_file *this, atomic_bool const *cancelled) {
     assert(this);
     struct ld_error err        = OK;
     XXH64_state_t *const state = XXH64_createState();
@@ -54,6 +55,11 @@ struct ld_error compute_hash(struct ld_file *this) {
         goto clean_state;
     }
     while (true) {
+        if (cancelled && *cancelled) {
+            err = CANCEL;
+            goto clean_reader;
+        }
+
         file_reader_next_chunk(&reader);
         if (ferror(reader.fstream)) {
             err = (struct ld_error){.type = ld_ERR_CANT_ACCESS, .message = strdup(this->path)};
@@ -124,13 +130,21 @@ clean_reader1:
     return err;
 }
 
-struct ld_error check_if_duplicates(struct ld_file *file1, struct ld_file *file2, bool *result) {
+struct ld_error check_if_duplicates(struct ld_file *file1, struct ld_file *file2,
+        atomic_bool const *cancelled, bool *result) {
     assert(file1 && file2);
+    struct ld_error err = OK;
     if (!file1->has_hash) {
-        compute_hash(file1); // TODO put errors to sink
+        err = compute_hash(file1, cancelled); // TODO put errors to sink
+        if (err.type != ld_ERR_OK) {
+            return err;
+        }
     }
     if (!file2->has_hash) {
-        compute_hash(file2); // TODO put errors to sink
+        err = compute_hash(file2, cancelled); // TODO put errors to sink
+        if (err.type != ld_ERR_OK) {
+            return err;
+        }
     }
     if (file1->hash != file2->hash) {
         *result = false;

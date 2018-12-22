@@ -4,7 +4,6 @@
 extern "C" {
 #endif
 
-
 #include "ld_error.h"
 
 #include <stdbool.h>
@@ -19,7 +18,6 @@ struct ld_file {
 static inline void ld_file_clear(struct ld_file *cthis) {
     free(cthis->path);
 }
-
 
 #ifdef __cplusplus
 }
