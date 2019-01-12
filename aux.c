@@ -204,6 +204,7 @@ struct ld_error add_to_tree(struct ld_duplicates_tree *tree, struct ld_file *fil
 void file_list_clear(struct file_list *this) {
     while (!SLIST_EMPTY(this)) {
         struct file_list_entry *first = SLIST_FIRST(this);
+        ld_file_clear(&first->file);
         SLIST_REMOVE_HEAD(this, entries);
         free(first);
     }
