@@ -121,7 +121,7 @@ struct ld_error process_node(struct ld_duplicates_tree_node **node, struct ld_ra
         }
         if (err.type != ld_ERR_OK) {
             return err;
-
+        }
         if (are_duplicates) {
             SLIST_REMOVE(*node, it, ld_ranked_list_entry, entries);
             SLIST_INSERT_HEAD(dups, it, entries); // takes ownership
