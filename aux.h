@@ -1,9 +1,9 @@
 #pragma once
 
+#include "atomics.h"
 #include "ld_duplicates_tree.h"
 #include "ld_error.h"
 #include "ld_file.h"
-#include "atomics.h"
 
 #include <stdbool.h>
 
