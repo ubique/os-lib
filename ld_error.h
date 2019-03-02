@@ -13,6 +13,7 @@ struct ld_error {
         ld_ERR_END_OF_ITERATION,
         ld_ERR_HASHING_ERROR,
         ld_ERR_CANCELLED,
+        ld_ERR_NULL,
     } type;
     char *message;
 };

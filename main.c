@@ -28,6 +28,29 @@ char *calculate_size(size_t size_in_bytes) {
     return result;
 }
 
+char const *error_msg(struct ld_error err) {
+    switch (err.type) {
+    case ld_ERR_OK:
+        return "ok";
+    case ld_ERR_CANT_ACCESS:
+        return "can't access a file";
+    case ld_ERR_NOT_DIRECTORY:
+        return "not a directory";
+    case ld_ERR_OUT_OF_MEMORY:
+        return "out of memory";
+    case ld_ERR_END_OF_ITERATION:
+        return "end of iteration";
+    case ld_ERR_HASHING_ERROR:
+        return "hashing error";
+    case ld_ERR_CANCELLED:
+        return "cancelled";
+    case ld_ERR_NULL:
+        return "null parameter";
+    default:
+        return "unexpected error";
+    }
+}
+
 int main(int argc, char *argv[]) {
     char const *dirname = argc == 1 ? "." : argv[1];
     struct ld_context context;
@@ -45,6 +68,10 @@ int main(int argc, char *argv[]) {
             }
             --duplicates_count, total_size -= context.dups_list.file_size;
             LD_RANKED_LIST_CLEAR(&context.dups_list);
+        } else if (err.type != ld_ERR_END_OF_ITERATION && err.type != ld_ERR_CANCELLED) {
+            printf("error occured: %s\n", error_msg(err));
+            ld_context_clear(&context);
+            return 0;
         } else {
             break;
         }
