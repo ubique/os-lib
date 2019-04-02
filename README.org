@@ -1,0 +1,17 @@
+#+TITLE: ldupes
+
+ldupes is a library for finding duplicates.
+
+* Example
+  The repository provides [[file:main.c][a utility]] to count total number of duplicates and
+  space that they waste. It makes use of the library and may be used as a
+  reference. In short, its behaviour is similar to ~fdupes -rnmq~. 
+  
+** build and run
+   #+BEGIN_SRC sh
+     mkdir build
+     cd build
+     cmake -DCMAKE_BUILD_TYPE=Release ..
+     cmake --build . --target ldupes-run
+     ./ldupes-run
+   #+END_SRC
