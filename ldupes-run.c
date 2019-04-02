@@ -1,7 +1,7 @@
 #include "ldupes.h"
 
 #include <inttypes.h> // uint64_t
-#include <stdio.h>    // snprintf
+#include <stdio.h>    // snprintf, fprintf, stderr
 #include <string.h>   // strcup
 
 #define DIM(x) (sizeof(x) / sizeof(*(x)))
@@ -55,6 +55,7 @@ int main(int argc, char *argv[]) {
     char const *dirname = argc == 1 ? "." : argv[1];
     struct ld_context context;
     ld_context_init(&context, dirname);
+
     unsigned duplicates_count = 0, sets_count = 0;
     uint64_t total_size = 0;
     while (true) {
@@ -66,10 +67,11 @@ int main(int argc, char *argv[]) {
                 ++duplicates_count;
                 total_size += context.dups_list.file_size;
             }
-            --duplicates_count, total_size -= context.dups_list.file_size;
+            --duplicates_count;
+            total_size -= context.dups_list.file_size;
             LD_RANKED_LIST_CLEAR(&context.dups_list);
         } else if (err.type != ld_ERR_END_OF_ITERATION && err.type != ld_ERR_CANCELLED) {
-            printf("error occured: %s\n", error_msg(err));
+            fprintf(stderr, "error occured: %s\n", error_msg(err));
             ld_context_clear(&context);
             return 0;
         } else {
@@ -79,5 +81,6 @@ int main(int argc, char *argv[]) {
     char *size_presentation = calculate_size(total_size);
     printf("%u duplicates found (in %u sets), occupying %s\n", duplicates_count, sets_count, size_presentation);
     free(size_presentation);
+
     ld_context_clear(&context);
 }
