@@ -22,7 +22,7 @@ add_library(atomics SHARED
         atomics.h)
 set_target_properties(atomics PROPERTIES LINKER_LANGUAGE C)
 
-add_executable(ldupes_testing main.c)
+add_executable(ldupes-run main.c)
 
 target_link_libraries(ldupes atomics)
-target_link_libraries(ldupes_testing ldupes)
+target_link_libraries(ldupes-run ldupes)
