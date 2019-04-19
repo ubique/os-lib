@@ -18,7 +18,7 @@ struct dlhandler {
     {
         if (handle != nullptr) {
             if (dlclose(handle) != 0) {
-                std::cerr << strerror(errno) << std::endl;
+                std::cerr << dlerror() << std::endl;
             }
         }
     }
@@ -28,14 +28,14 @@ int main()
 {
     dlhandler handler("libthird_supplier.so");
     if (handler.handle == nullptr) {
-        std::cerr << strerror(errno) << std::endl;
+        std::cerr << dlerror() << std::endl;
         return 1;
     }
     std::string (*get_data_from_third_supplier)() =
         reinterpret_cast<std::string (*)()>(
             handler.get("get_data_from_third_supplier"));
     if (get_data_from_third_supplier == nullptr) {
-        std::cerr << strerror(errno) << std::endl;
+        std::cerr << dlerror() << std::endl;
         return 1;
     }
     std::cout << get_data_from_first_supplier() << " "
