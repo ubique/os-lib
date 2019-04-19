@@ -17,7 +17,7 @@ struct dlhandler {
     ~dlhandler()
     {
         if (handle != nullptr) {
-            if (dlclose(handle) == -1) {
+            if (dlclose(handle) != 0) {
                 std::cerr << strerror(errno) << std::endl;
             }
         }
