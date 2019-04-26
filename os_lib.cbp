@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="os_lib"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\static-lib\;CMake Files\first-dynamic-lib\;CMake Files\second-dynamic-lib\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="os_lib">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/os_lib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 os_lib"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="os_lib/fast">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/os_lib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 os_lib/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="static-lib">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/libstatic-lib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 static-lib"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="static-lib/fast">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/libstatic-lib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 static-lib/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="first-dynamic-lib">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/libfirst-dynamic-lib.dylib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 first-dynamic-lib"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="first-dynamic-lib/fast">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/libfirst-dynamic-lib.dylib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 first-dynamic-lib/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="second-dynamic-lib">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/libsecond-dynamic-lib.dylib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 second-dynamic-lib"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="second-dynamic-lib/fast">
+				<Option output="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/libsecond-dynamic-lib.dylib" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib"/>
+					<Add directory="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 second-dynamic-lib/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/print_news.cpp">
+			<Option target="first-dynamic-lib"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/main.cpp">
+			<Option target="os_lib"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/print_pics.cpp">
+			<Option target="second-dynamic-lib"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/destroy.cpp">
+			<Option target="static-lib"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/static-lib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\static-lib\"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/first-dynamic-lib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\first-dynamic-lib\"/>
+		</Unit>
+		<Unit filename="/Users/miketerentyev/itmo/2-year/os-course/os-lib/second-dynamic-lib/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\second-dynamic-lib\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
