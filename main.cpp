@@ -6,7 +6,7 @@
 int main() {
     destroy();
     showTweetybird();
-    void *s_dynamic_lib = dlopen("./second-dynamic-lib/second-dynamic-lib.so", RTLD_LAZY);
+    void *s_dynamic_lib = dlopen("./second-dynamic-lib/libsecond-dynamic-lib.so", RTLD_LAZY);
     if (nullptr == s_dynamic_lib) {
         cerr << "Error in loading library: " << dlerror() << endl;
         return -1;
