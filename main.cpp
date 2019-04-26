@@ -12,7 +12,7 @@ int main() {
         return -1;
     }
 
-    auto downloadedPrintPics =((void (*)()) dlsym(s_dynamic_lib, "_Z10print_picsv"));
+    auto downloadedPrintPics =((void (*)()) dlsym(s_dynamic_lib, "print_pics"));
     if (nullptr != downloadedPrintPics) {
          downloadedPrintPics();
     } else {

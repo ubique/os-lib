@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void print_pics(){
+extern "C" void print_pics(){
     cout<<R"BLOCK(FROM DOWNLOADED DYNAMIC LIB
 ──────────────────────────────░░░────────
 ───────────────────────────░▓█████▒──────
