@@ -3,9 +3,12 @@ cmake-build-debug
 cmake_install.cmake
 CMakeCache.txt
 os_lib
+*.cmake
 os_lib.cbp
 _Store
 .idea
 os_lib
 os_lib.cbp
 .DS_Store
+*.dylib
+*.a
