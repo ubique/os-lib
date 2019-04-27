@@ -1,25 +1,29 @@
-#  Знакомство с библиотеками
+# Library linkage
 
-Необходимо создать статическую, и две динамических библиотеки и программу, которая будет их использовать.
-Помимо этого нужен Makefile(либо другой инструмент автоматизации сборки), с помощью которого можно будет собрать все части.
+## Goal
+This is an educational task aimed at understanding how to link
+with static and dynamic libraries and use `dlopen(3)` at
+runtime.
 
-## Статическая библиотека должна:
- * Собираться статически
- * Предоставлять какие-то функции<
+## Components
+`libfoo` — static library  
+`libbar` — dynamic library, linked  
+`libbaz` — dynamic library, loaded with dlopen  
+`foobarbaz` — executable that loads the 3 libs
 
-## Первая динамическая библиотека должна:
- * Собираться динамически
- * Динамически линковаться с программой на этапе линковки
- * Предоставлять какие-то функции
+## Usage
+```
+$ mkdir build
+$ cd build
+$ cmake .. -DCMAKE_INSTALL_PREFIX=../prefix
+$ make install
+$ cd ../prefix/bin
+$ LD_LIBRARY_PATH=. ./foobarbaz   # Prints 'FooBarBaz'
+$ ldd ./foobarbaz   # Does not show libbaz.so
+```
 
-## Вторая динамическая библиотека должна:
- * Собираться динамически
- * Предоставлять какие-то функции
+## Copyright
+Ilya Bizyaev, 2019 (<me@ilyabiz.com>)
 
-## Программа должна
- * Статически линковаться с статической библиотекой и вызывать предоставляемые ей функции
- * Динамически линковаться с первой динамической библиотекой и вызывать предоставляемые ей функции
- * Во время выполнения в явном виде загружать вторую динамическию библиотеку с помощью dlopen(3) и вызывать какие-то функции из нее
+Available in public domain.
 
-# Что может помочь при выполнении задания?
- * man dlopen(3), man ld(1), man gcc(1)
