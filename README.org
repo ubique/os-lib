@@ -9,9 +9,5 @@ ldupes is a library for finding duplicates.
   
 ** build and run
    #+BEGIN_SRC sh
-     mkdir build
-     cd build
-     cmake -DCMAKE_BUILD_TYPE=Release ..
-     cmake --build . --target ldupes-run
-     ./ldupes-run
+     make && make SEARCH_AT='path/to/search/for/duplicates/in' run
    #+END_SRC
