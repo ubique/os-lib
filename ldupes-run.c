@@ -1,32 +1,9 @@
 #include "ldupes.h"
 
 #include <inttypes.h> // uint64_t
+#include <dlfcn.h>    // dlopen, dlsym, dlclose, dlerror
 #include <stdio.h>    // snprintf, fprintf, stderr
-#include <string.h>   // strcup
-
-#define DIM(x) (sizeof(x) / sizeof(*(x)))
-
-const char *sizes[]      = {"GiB", "MiB", "KiB", "B"};
-const uint64_t gibibytes = 1024ULL * 1024ULL * 1024ULL;
-
-char *calculate_size(size_t size_in_bytes) {
-    char *result        = malloc(sizeof(char) * 20);
-    uint64_t multiplier = gibibytes;
-
-    for (size_t i = 0; i < DIM(sizes); i++, multiplier /= 1024) {
-        if (size_in_bytes < multiplier) {
-            continue;
-        }
-        if (size_in_bytes % multiplier == 0) {
-            snprintf(result, 20, "%" PRIu64 " %s", size_in_bytes / multiplier, sizes[i]);
-        } else {
-            snprintf(result, 20, "%.1lf %s", (double)size_in_bytes / multiplier, sizes[i]);
-        }
-        return result;
-    }
-    strcpy(result, "0");
-    return result;
-}
+#include <string.h>   // strcpy
 
 char const *error_msg(struct ld_error err) {
     switch (err.type) {
@@ -52,6 +29,18 @@ char const *error_msg(struct ld_error err) {
 }
 
 int main(int argc, char *argv[]) {
+    void *handle = dlopen("libsize-to-str.so", RTLD_LAZY);
+    if (handle == NULL) {
+        fprintf(stderr, "%s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
+    char *(*size_to_str)(size_t size_in_bytes) = dlsym(handle, "size_to_str");
+    if (size_to_str == NULL) {
+        fprintf(stderr, "%s\n", dlerror());
+        exit(EXIT_FAILURE);
+    }
+    dlerror(); // clear errors
+
     char const *dirname = argc == 1 ? "." : argv[1];
     struct ld_context context;
     ld_context_init(&context, dirname);
@@ -73,14 +62,15 @@ int main(int argc, char *argv[]) {
         } else if (err.type != ld_ERR_END_OF_ITERATION && err.type != ld_ERR_CANCELLED) {
             fprintf(stderr, "error occured: %s\n", error_msg(err));
             ld_context_clear(&context);
-            return 0;
+            exit(EXIT_FAILURE);
         } else {
             break;
         }
     }
-    char *size_presentation = calculate_size(total_size);
-    printf("%u duplicates found (in %u sets), occupying %s\n", duplicates_count, sets_count, size_presentation);
+    char *size_presentation = size_to_str(total_size);
+    printf("In '%s' %u duplicates found (in %u sets), occupying %s\n", dirname, duplicates_count, sets_count, size_presentation);
     free(size_presentation);
 
     ld_context_clear(&context);
+    dlclose(handle);
 }

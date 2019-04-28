@@ -1,7 +1,6 @@
 #include "aux.h"
 #include "ld_file.h"
 
-#include "atomics.h"
 #include "rbtree.h"
 #include "xxhash.h"
 
