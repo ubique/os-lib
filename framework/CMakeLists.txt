@@ -8,10 +8,10 @@ add_library(${PROJECT_NAME}-object OBJECT ${sources})
 
 target_include_directories(${PROJECT_NAME}-object
         PUBLIC
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        "$<INSTALL_INTERFACE:include>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_SOURCE_DIR}/private>"
         PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"
         )
 set_target_properties(${PROJECT_NAME}-object PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
