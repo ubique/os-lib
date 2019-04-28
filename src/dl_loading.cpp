@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 	}
 	void *fun = dlsym(lib, "mix");
 	if (!fun) {
-		error(EXIT_FAILURE, errno, "public dll's function isn't available outside%s", dlerror());
+		error(EXIT_FAILURE, errno, "public dll's function isn't available outside: %s", dlerror());
 	}
 	void *private_fun = dlsym(lib, "mixImpl");
 	if (private_fun) {
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	std::cout << mix1 << std::endl;
 	std::cout << mix2 << std::endl;
 
-	if (dlclose(fun) != 0) {
+	if (dlclose(lib) != 0) {
 		error(EXIT_FAILURE, errno, "%s", dlerror());
 	}
 	return 0;
