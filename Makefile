@@ -8,7 +8,7 @@ GCC_OBJ = $(GCC) -c
 
 all: $(PROD_DIR) main.o $(STATIC) $(LINK_DYN) $(LOAD_DYN)
 	$(GCC) -o main -L./$(PROD_DIR) -Wl,-rpath,./$(PROD_DIR) main.o -lfirstDynamic -ldl $(STATIC)
-	rm -rf main *.o
+	rm -rf *.o
 
 out:
 	mkdir out
@@ -35,4 +35,4 @@ exponentiation.o: secondDynamic/exponentiation.cpp secondDynamic/exponentiation.
 	$(GCC_OBJ) -fPIC -o $@ $<
 
 clean:
-	rm -rf out
+	rm -rf main out
