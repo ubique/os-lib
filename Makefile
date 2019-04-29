@@ -16,7 +16,7 @@ out:
 main.o: main.cpp
 	$(GCC_OBJ) -o $@ $<
 
-out/static.a: multiplication.o
+$(STATIC): multiplication.o
 	ar rvs $@ $<
 
 multiplication.o: static/multiplication.cpp static/multiplication.h
