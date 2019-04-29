@@ -1,6 +1,5 @@
 GCC = g++
 SRC = library_sources
-LIBDYNAMIC = libdynamic.so
 DYNAMIC_FLAG = -shared
 MAIN = main
 
