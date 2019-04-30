@@ -5,6 +5,6 @@
 #ifndef OS_LIB_PRINTER_H
 #define OS_LIB_PRINTER_H
 
-void printInteger(int a);
+void printInt(int a);
 
 #endif //OS_LIB_PRINTER_H

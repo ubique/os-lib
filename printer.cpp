@@ -4,6 +4,6 @@
 
 #include <iostream>
 
-void print(int a) {
+void printInt(int a) {
     std::cout << "Hello, your number: " << a << std::endl;
 }

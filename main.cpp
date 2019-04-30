@@ -17,7 +17,7 @@ int main() {
 
     std::cout << "Type in integer number" << std::endl;
     std::cin >> number;
-    printInteger(number);
+    printInt(number);
 
     std::cout << "Type in unsigned long long (combination bit mask)" << std::endl;
     std::cin >> mask;
@@ -25,6 +25,7 @@ int main() {
     std::cout << "Next combination mask = " << nextMask << std::endl;
 
     std::cout << "Type in Fibonacci number you want to calculate" << std::endl;
+    std::cin >> numberNth;
     void* loadedLibrary = dlopen(LOADED_LIB_NAME, RTLD_LAZY);
     if (loadedLibrary == nullptr) {
         printErrorMessage("Failed to load library");
