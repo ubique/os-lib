@@ -10,10 +10,10 @@ void printErr(const std::string& message) {
 
 void printUsage() {
     printf("Usage:\n"
-           "This program code given string by different coding:\n"
-           "1) All char to their number\n"
-           "2) Caesar code by given shift\n"
-           "3) ROT1 code\n");
+           "This program codes given string by various encryption:\n"
+           "1) All chars to their number\n"
+           "2) Caesar cypher by given shift\n"
+           "3) ROT1 cypher\n");
 }
 
 int main() {
