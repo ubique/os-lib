@@ -21,7 +21,7 @@ clean:
 	$(RM) -r $(BUILD)
 
 run: $(BUILD)/ldupes-run
-	LD_LIBRARY_PATH="$(BUILD):$(LD_LIBRARY_PATH)" $(BUILD)/ldupes-run $(SEARCH_AT)
+	LD_LIBRARY_PATH="$$LD_LIBRARY_PATH:$(BUILD)" $(BUILD)/ldupes-run $(SEARCH_AT)
 
 $(BUILD)/%.o: %.c
 	cc -c -O2 -o $@ $<
