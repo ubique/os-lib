@@ -1,10 +1,13 @@
 GCC = g++
 PROD_DIR = out
-STATIC = $(PROD_DIR)/static.a
+STATIC = $(PROD_DIR)/libstatic.a
 LINK_DYN = $(PROD_DIR)/libfirstDynamic.so
 LOAD_DYN = $(PROD_DIR)/libsecondDynamic.so
 GCC_BIBL = $(GCC) -shared
 GCC_OBJ = $(GCC) -c
+
+run: all
+	export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${PWD}; ./main
 
 all: $(PROD_DIR) main.o $(STATIC) $(LINK_DYN) $(LOAD_DYN)
 	$(GCC) -o main -L./$(PROD_DIR) -Wl,-rpath,./$(PROD_DIR) main.o -lfirstDynamic -ldl $(STATIC)
