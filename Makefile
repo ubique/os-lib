@@ -43,7 +43,7 @@ $(DIR)/%.o: %.cpp %.h
 	mkdir -p $(DIR)
 	$(CXX) -fPIC -c $< -o $@
 
-.PONY: clean
+.PHONY: clean
 clean:
 	rm -r $(DIR)
 	rm $(MAIN)
