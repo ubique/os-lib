@@ -1,7 +1,6 @@
 CXX_COMPILER = g++
 CXX_STANDART = -std=c++14
 
-
 STATIC = printer
 DYNAMIC = combination
 LOADED = fibonacci
@@ -30,6 +29,7 @@ $(STATIC).o: $(STATIC).cpp $(STATIC).h
 	
 %.o: %.cpp %.h
 	$(CXX_COMPILER) -fPIC -c $< -o $@
-	
+
+.PHONY: clean
 clean:
 	rm main *.a *.o *.so 
