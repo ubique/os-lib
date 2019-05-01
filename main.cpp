@@ -3,7 +3,7 @@
 
 #include "hello_name.h"
 #include "dynamic1.h"
-#include "dynamic2.h"
+//#include "dynamic2.h"
 
 void error(std::string message) {
 	std::cerr << message << std::endl;
