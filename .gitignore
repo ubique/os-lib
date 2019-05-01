@@ -1,2 +1,7 @@
 *.exe
 *.out
+
+*.gch
+*.o
+
+lib/
