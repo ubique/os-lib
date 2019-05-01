@@ -6,7 +6,7 @@
 #define OS_LIB_MUL_H
 
 
-template <type T>
+template <typename T>
 T mul(T const & a, T const & b);
 
 #endif //OS_LIB_MUL_H
