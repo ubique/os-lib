@@ -4,9 +4,9 @@
 
 #include <cstddef>
 
-#include "palindrom.h"
+#include "palindrome.h"
 
-bool isPalindrom(const std::string& word) {
+bool isPalindrome(const std::string& word) {
     size_t n = word.size();
     for (int i = 0; i < n / 2; ++i) {
         if (word[i] != word[n - i - 1]) {

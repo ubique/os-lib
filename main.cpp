@@ -5,12 +5,12 @@
 #include <iostream>
 
 #include "fibonacci.h"
-#include "palindrom.h"
+#include "palindrome.h"
 #include "greeting.h"
 
 int main() {
     greeting("Kirill");
     std::cout << calculateFibonacci(100) << std::endl;
-    std::cout << isPalindrom("kek") << std::endl;
-    std::cout << isPalindrom("keek") << std::endl;
+    std::cout << isPalindrome("kek") << std::endl;
+    std::cout << isPalindrome("keek") << std::endl;
 }
