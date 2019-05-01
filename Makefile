@@ -11,7 +11,7 @@ clean:
 # executable
 
 main: main.o $(OUT_PATH)/static.a $(OUT_PATH)/dynamic_linkage.so $(OUT_PATH)/dynamic_load.so
-	$(CXX) -L./$(OUT_PATH) -Wl,-rpath,. -o $@ $^ -ldl
+	$(CXX) -L. -l:./$(OUT_PATH)/static.a -l:./$(OUT_PATH)/dynamic_linkage.so -Wl,-rpath,. -o $@ $^ -ldl
 
 main.o: main.cpp
 	$(CXX) -c $^ -o $@

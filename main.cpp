@@ -44,7 +44,7 @@ int main() {
     if (lib == nullptr) {
         return console::report("Can not link with external library:", dlerror());
     }
-    auto print_random_name = (void (*)()) dlsym(lib, "print_random_name");
+    auto print_random_name = (void (*)()) dlsym(lib, "_Z17print_random_namev");
     if (print_random_name == nullptr) {
         dlclose(lib);
         return console::report("Can not load function from linked library:", dlerror());

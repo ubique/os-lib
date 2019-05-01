@@ -4,6 +4,19 @@
 #include <string>
 #include <cstdlib>
 #include <iostream>
+#include <chrono>
+#include <random>
+#include <limits>
+
+namespace rnd {
+    unsigned int seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()); // NOLINT
+    std::mt19937 gen(seed); // NOLINT
+    std::uniform_int_distribution<> distribution(0, std::numeric_limits<int>::max()); // NOLINT
+
+    unsigned int randint(unsigned int limit) {
+        return static_cast<unsigned int>(distribution(gen) % limit);
+    }
+}
 
 void print_random_name() {
     static std::vector<std::string> first_names{
@@ -177,8 +190,8 @@ void print_random_name() {
     static std::string GREEN = "\033[032;1m";
     static std::string WHITE = "\033[0m";
 
-    unsigned int n1 = std::rand() % first_names.size();
-    unsigned int n2 = std::rand() % last_names.size();
+    unsigned int n1 = rnd::randint(first_names.size());
+    unsigned int n2 = rnd::randint(last_names.size());
 
     std::cout << GREEN << first_names[n1] << ' ' << last_names[n2] << std::endl << WHITE;
 }
