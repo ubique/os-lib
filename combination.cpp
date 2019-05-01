@@ -5,7 +5,7 @@
 #include <iostream>
 #include "combination.h"
 
-unsigned long long nextCombinationMask(uint64_t currentMask) {
+unsigned long long nextCombinationMask(unsigned long long currentMask) {
     unsigned long long a = currentMask & -currentMask;
     unsigned long long b = currentMask + a;
     unsigned long long c = b ^ currentMask;
