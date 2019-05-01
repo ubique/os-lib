@@ -9,7 +9,7 @@
 uint64_t gcd(uint64_t a, uint64_t b) {
     while (b) {
         a %= b;
-        int64_t tmp = a;
+        uint64_t tmp = a;
         a = b;
         b = tmp;
     }
@@ -17,7 +17,7 @@ uint64_t gcd(uint64_t a, uint64_t b) {
 }
 
 uint64_t binpower(uint64_t x, uint64_t pow, uint64_t mod) {
-    int64_t result = 1;
+    uint64_t result = 1;
     x %= mod;
 
     while (pow) {
