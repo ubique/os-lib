@@ -6,6 +6,7 @@
 
 #include "palindrome.h"
 
+extern "C"
 bool isPalindrome(const std::string& word) {
     size_t n = word.size();
     for (int i = 0; i < n / 2; ++i) {

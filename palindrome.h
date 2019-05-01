@@ -8,6 +8,7 @@
 
 #include <string>
 
+extern "C"
 bool isPalindrome(const std::string& word);
 
 #endif //OS_LIB_PALINDROME_H
