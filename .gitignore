@@ -1,5 +1,6 @@
 .git/
 .idea/
+cmake-build-*/
 
 *.exe
 *.out
