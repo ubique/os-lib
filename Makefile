@@ -13,10 +13,10 @@ LOADED_LIB = lib$(LOADED).so
 all: main
 
 run: main
-	./main
+	LD_LIBRARY_PATH="$$LD_LIBRARY_PATH:$(DIR)" ./main $(SEARCH_AT)
 
 main: $(DIR)/$(MAIN).o $(DIR)/$(STATIC_LIB) $(DIR)/$(DYNAMIC_LIB) $(DIR)/$(LOADED_LIB)
-	$(CXX) $(DIR)/$(MAIN).o -L $(DIR) -l$(STATIC) -L $(DIR) -l$(DYNAMIC) -ldl -o $@
+	$(CXX) $(DIR)/$(MAIN).o -L $(DIR) -l$(STATIC) -l$(DYNAMIC) -ldl -o $@
 
 $(DIR)/$(STATIC_LIB): $(DIR)/$(STATIC).o
 	ar rcs $@ $<
