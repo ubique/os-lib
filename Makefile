@@ -1,6 +1,7 @@
 CXX = g++
 CXX_STANDARD = -std=c++14
 
+DIR = out
 STATIC = greeting
 DYNAMIC = fibonacci
 LOADED = palindrome
@@ -14,28 +15,35 @@ all: main
 run: main
 	./main
 
-main: $(MAIN).o $(STATIC_LIB) $(DYNAMIC_LIB) $(LOADED_LIB)
-	g++ $(MAIN).o -L. -l$(STATIC) -L. -l$(DYNAMIC) -ldl -o $@
+main: $(DIR)/$(MAIN).o $(DIR)/$(STATIC_LIB) $(DIR)/$(DYNAMIC_LIB) $(DIR)/$(LOADED_LIB)
+	$(CXX) $(DIR)/$(MAIN).o -L $(DIR) -l$(STATIC) -L $(DIR) -l$(DYNAMIC) -ldl -o $@
 
-$(MAIN).o: $(MAIN).cpp
-	$(CXX) $(CXX_STANDARD) -c $< -o $(MAIN).o
+$(DIR)/$(STATIC_LIB): $(DIR)/$(STATIC).o
+	ar rcs $@ $<
 
-$(STATIC_LIB): $(STATIC).o
-	ar rcs $(STATIC_LIB) $<
+$(DIR)/lib%.so: $(DIR)/%.o
+	$(CXX) -shared $< -o $@
 
-$(DYNAMIC_LIB): $(DYNAMIC).o
-	$(CXX) -shared $< -o $(DYNAMIC_LIB)
+$(DIR)/$(DYNAMIC_LIB): $(DIR)/$(DYNAMIC).o
+	$(CXX) -shared $< -o $@
 
-$(LOADED_LIB): $(LOADED).o
-	$(CXX) -shared $< -o $(LOADED_LIB)
+$(DIR)/$(LOADED_LIB): $(DIR)/$(LOADED).o
+	$(CXX) -shared $< -o $@
 
-$(STATIC).o: $(STATIC).cpp $(STATIC).h
+$(DIR)/$(MAIN).o: $(MAIN).cpp
+	mkdir -p $(DIR)
+	$(CXX) $(CXX_STANDARD) -c $< -o $@
+
+$(DIR)/$(STATIC).o: $(STATIC).cpp $(STATIC).h
+	mkdir -p $(DIR)
 	$(CXX) -c $< -o $@
 
 # For dynamic libs
-%.o: %.cpp %.h
+$(DIR)/%.o: %.cpp %.h
+	mkdir -p $(DIR)
 	$(CXX) -fPIC -c $< -o $@
 
 .PONY: clean
 clean:
-	rm main *.a *.o *.so
+	rm -r $(DIR)
+	rm $(MAIN)

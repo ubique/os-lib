@@ -9,7 +9,7 @@
 #include "greeting.h"
 #include "fibonacci.h"
 
-const char LOADED_LIB_NAME [] = "./libpalindrome.so";
+const char LOADED_LIB_NAME [] = "./out/libpalindrome.so";
 
 void printErrorMessage(std::string const& message) {
     std::cerr << message <<": " << dlerror() << std::endl;
