@@ -1,0 +1,2 @@
+C:/Users/isuca/projects/itmo/4-semester/os/os-lib/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/isuca/projects/itmo/4-semester/os/os-lib/cmake-build-debug/CMakeFiles/rebuild_cache.dir
