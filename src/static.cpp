@@ -92,7 +92,7 @@ static std::vector<digit> DIGITS{
 static unsigned int NROW = 6;
 
 void print_ascii_number(unsigned int value) {
-    static std::string BLUE = "\033[34m";
+    static std::string BLUE = "\033[34;1m";
     static std::string WHITE = "\033[0m";
 
     std::vector<int> decompose;

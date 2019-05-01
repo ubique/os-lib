@@ -3,7 +3,18 @@ OUT_PATH=lib
 
 CXX=g++ -std=c++14
 
-all: static.a dynamic_linkage.so dynamic_load.so clean
+all: main
+
+clean:
+	rm main *.o
+
+# executable
+
+main: main.o static.a dynamic_linkage.so dynamic_load.so
+	$(CXX) $< -L. -l:./$(OUT_PATH)/static.a -l:./$(OUT_PATH)/dynamic_linkage.so -Wl,-rpath,. -ldl -o $@
+
+main.o: main.cpp
+	$(CXX) -c $^ -o $@
 
 # static library
 
@@ -28,6 +39,3 @@ dynamic_load.o: $(LIB_PATH)/dynamic_load.cpp $(LIB_PATH)/dynamic_load.hpp
 
 dynamic_load.so: dynamic_load.o
 	$(CXX) -shared $< -o $(OUT_PATH)/$@
-
-clean:
-	rm *.o

@@ -1,184 +1,24 @@
 #include "dynamic_linkage.hpp"
 
-#include <vector>
-#include <string>
-#include <cstdlib>
 #include <iostream>
 
-static std::vector<std::string> first_names{
-    "Bumblebee",
-    "Bandersnatch",
-    "Broccoli",
-    "Rinkydink",
-    "Bombadil",
-    "Boilerdang",
-    "Bandicoot",
-    "Fragglerock",
-    "Muffintop",
-    "Congleton",
-    "Blubberdick",
-    "Buffalo",
-    "Benadryl",
-    "Butterfree",
-    "Burberry",
-    "Whippersnatch",
-    "Buttermilk",
-    "Beezlebub",
-    "Budapest",
-    "Boilerdang",
-    "Blubberwhale",
-    "Bumberstump",
-    "Bulbasaur",
-    "Cogglesnatch",
-    "Liverswort",
-    "Bodybuild",
-    "Johnnycash",
-    "Bendydick",
-    "Burgerking",
-    "Bonaparte",
-    "Bunsenburner",
-    "Billiardball",
-    "Bukkake",
-    "Baseballmitt",
-    "Blubberbutt",
-    "Baseballbat",
-    "Rumblesack",
-    "Barister",
-    "Danglerack",
-    "Rinkydink",
-    "Bombadil",
-    "Honkytonk",
-    "Billyray",
-    "Bumbleshack",
-    "Snorkeldink",
-    "Anglerfish",
-    "Beetlejuice",
-    "Bedlington",
-    "Bandicoot",
-    "Boobytrap",
-    "Blenderdick",
-    "Bentobox",
-    "Anallube",
-    "Pallettown",
-    "Wimbledon",
-    "Buttercup",
-    "Blasphemy",
-    "Syphilis",
-    "Snorkeldink",
-    "Brandenburg",
-    "Barbituate",
-    "Snozzlebert",
-    "Tiddleywomp",
-    "Bouillabaisse",
-    "Wellington",
-    "Benetton",
-    "Bendandsnap",
-    "Timothy",
-    "Brewery",
-    "Bentobox",
-    "Brandybuck",
-    "Benjamin",
-    "Buckminster",
-    "Bourgeoisie",
-    "Bakery",
-    "Oscarbait",
-    "Buckyball",
-    "Bourgeoisie",
-    "Burlington",
-    "Buckingham",
-    "Barnoldswick"
-};
+static unsigned int MOD = 1000000009;
 
-static std::vector<std::string> last_names{
-    "Coddleswort",
-    "Crumplesack",
-    "Curdlesnoot",
-    "Calldispatch",
-    "Humperdinck",
-    "Rivendell",
-    "Cuttlefish",
-    "Lingerie",
-    "Vegemite",
-    "Ampersand",
-    "Cumberbund",
-    "Candycrush",
-    "Clombyclomp",
-    "Cragglethatch",
-    "Nottinghill",
-    "Cabbagepatch",
-    "Camouflage",
-    "Creamsicle",
-    "Curdlemilk",
-    "Upperclass",
-    "Frumblesnatch",
-    "Crumplehorn",
-    "Talisman",
-    "Candlestick",
-    "Chesterfield",
-    "Bumbersplat",
-    "Scratchnsniff",
-    "Snugglesnatch",
-    "Charizard",
-    "Carrotstick",
-    "Cumbercooch",
-    "Crackerjack",
-    "Crucifix",
-    "Cuckatoo",
-    "Cockletit",
-    "Collywog",
-    "Capncrunch",
-    "Covergirl",
-    "Cumbersnatch",
-    "Countryside", "Coggleswort",
-    "Splishnsplash",
-    "Copperwire",
-    "Animorph",
-    "Curdledmilk",
-    "Cheddarcheese",
-    "Cottagecheese",
-    "Crumplehorn",
-    "Snickersbar",
-    "Banglesnatch",
-    "Stinkyrash",
-    "Cameltoe",
-    "Chickenbroth",
-    "Concubine",
-    "Candygram",
-    "Moldyspore",
-    "Chuckecheese",
-    "Cankersore",
-    "Crimpysnitch",
-    "Wafflesmack",
-    "Chowderpants",
-    "Toodlesnoot",
-    "Clavichord",
-    "Cuckooclock",
-    "Oxfordshire",
-    "Cumbersome",
-    "Chickenstrips",
-    "Battleship",
-    "Commonwealth",
-    "Cunningsnatch",
-    "Custardbath",
-    "Kryptonite",
-    "Curdlesnoot",
-    "Cummerbund",
-    "Coochyrash",
-    "Crackerdong",
-    "Crackerdong",
-    "Curdledong",
-    "Crackersprout",
-    "Crumplebutt",
-    "Colonist",
-    "Coochierash"
-};
+unsigned int power(unsigned int x, unsigned int p) {
+    if (p == 0) {
+        return 1u;
+    } else {
+        unsigned long long sqrt = power(x, p / 2);
+        unsigned long long full = sqrt * sqrt % MOD;
+        return static_cast<unsigned int>(p % 2 == 0 ? full : (full * x) % MOD);
+    }
+}
 
-void print_random_name() {
-    static std::string GREEN = "\033[032m";
+void print_inversion(unsigned int x) {
+    unsigned int inverse = power(x, MOD - 2);
+
+    static std::string RED = "\033[31;1m";
     static std::string WHITE = "\033[0m";
 
-    unsigned int n1 = std::rand() % first_names.size();
-    unsigned int n2 = std::rand() % last_names.size();
-
-    std::cout << GREEN << first_names[n1] << ' ' << last_names[n2] << std::endl << WHITE;
+    std::cout << RED << x << " * " << inverse << " = 1 (mod " << MOD << ")" << std::endl << WHITE;
 }
