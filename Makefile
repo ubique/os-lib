@@ -23,15 +23,12 @@ $(MAIN).o: $(MAIN).cpp
 $(STATIC_LIB): $(STATIC).o
 	ar rcs $(STATIC_LIB) $<
 
-lib%.so: %.o
-	$(CXX) -shared $< -o $@
+$(DYNAMIC_LIB): $(DYNAMIC).o
+	$(CXX) -shared $< -o $(DYNAMIC_LIB)
 
-#$(DYNAMIC_LIB): $(DYNAMIC).o
-#	$(CXX) -shared $< -o $(DYNAMIC_LIB)
-#
-#$(LOADED_LIB): $(LOADED).o
-#	$(CXX) -shared $< -o $(LOADED_LIB)
-	
+$(LOADED_LIB): $(LOADED).o
+	$(CXX) -shared $< -o $(LOADED_LIB)
+
 $(STATIC).o: $(STATIC).cpp $(STATIC).h
 	$(CXX) -c $< -o $@
 
