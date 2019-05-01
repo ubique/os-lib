@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined")
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tmp)
+
 add_library(st STATIC st.h st.cpp)
 add_library(dyn1 SHARED dyn1.h dyn1.cpp)
 add_library(dyn2 SHARED dyn2.h dyn2.cpp)
