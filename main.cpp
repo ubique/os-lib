@@ -4,7 +4,7 @@
 #include <dlfcn.h>
 
 
-typedef const int(*func)();
+typedef const int(*func)(int const &, int const &);
 
 void error(){
     std::cout << dlerror() << std::endl;
@@ -12,24 +12,24 @@ void error(){
 
 int main(){
     int a = 3, b = 5;
-    std::cout << a << ' ' << inc(a) << std::endl;
-    std::cout << a << ' ' << mul(a, b) << std::endl;
+    std::cout << inc(a) << ' ' << a << std::endl;
+    std::cout << "mul: " << ' ' << mul(a, b) << std::endl;
 
-    void *second = dlopen("libsecond_dynamic.so", RTLD_LAZY);
+    void *second = dlopen("libsum.so", RTLD_NOW);
 
     if (!second){
         error();
         return 0;
     }
 
-    func result = func(dlsym(second, "mul"));
+    func sum = reinterpret_cast<func>(dlsym(second, "sum"));
 
-    if (!result) {
+    if (!sum) {
         error();
         return 0;
     }
 
-    std::cout << a * b << std::endl;
+    std::cout << "sum: " << sum(a, b) << std::endl;
 
     if (dlclose(second)) {
         error();
