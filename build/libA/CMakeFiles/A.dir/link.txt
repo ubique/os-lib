@@ -1,0 +1,2 @@
+/usr/bin/ar qc libA.a  CMakeFiles/A.dir/A.c.o
+/usr/bin/ranlib libA.a

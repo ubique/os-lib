@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/main.dir/main.c.o  -o main -Wl,-rpath,/home/utusi/os-lib/build/libB libA/libA.a libB/libB.so -ldl 

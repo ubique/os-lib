@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC   -shared -Wl,-soname,libB.so -o libB.so CMakeFiles/B.dir/B.c.o 
