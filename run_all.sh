@@ -2,7 +2,10 @@
 
 mkdir out
 
-cmake --build out --target os-lib || exit 0
+cd out
+cmake --target os-lib || exit 0
+
+cd ..
 ./compile_plugins.sh || exit 0
 
 cd out
