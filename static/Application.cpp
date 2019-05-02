@@ -30,7 +30,7 @@ Application::Application(int argc, char **argv) {
 
 int Application::run() {
     string command;
-    cout << greet();
+    cout << greet(selectedPlugin);
     while (cin >> command) {
         try {
             if (command == pluginListCommand()) {
@@ -47,7 +47,7 @@ int Application::run() {
         } catch (ApplicationException const &exception) {
             cerr << errorMessage() << exception.what() << endl;
         }
-        cout << greet();
+        cout << greet(selectedPlugin);
     }
     return 0;
 }

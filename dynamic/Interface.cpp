@@ -38,8 +38,8 @@ std::string errorMessage() {
     return "Error: \n";
 }
 
-std::string greet() {
-    return "$ ";
+std::string greet(std::string const &plugin) {
+    return plugin + " $ ";
 }
 
 std::string runMessage() {

@@ -25,7 +25,7 @@ std::string runMessage();
 
 std::string selectMessage();
 
-std::string greet();
+std::string greet(std::string const &plugin);
 
 std::string pluginNotFoundError(const std::string &plugin);
 
