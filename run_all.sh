@@ -3,7 +3,8 @@
 mkdir out
 
 cd out
-cmake .. --target os-lib || exit 0
+cmake --target os-lib .. || exit 0
+make
 
 cd ..
 ./compile_plugins.sh || exit 0

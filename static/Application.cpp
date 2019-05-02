@@ -41,6 +41,8 @@ int Application::run() {
                 procSelect();
             } else if (command == symbolListCommand()) {
                 procSymbolList();
+            } else if (command == exitCommand()) {
+                break;
             }
         } catch (ApplicationException const &exception) {
             cerr << errorMessage() << exception.what() << endl;

@@ -18,6 +18,11 @@ std::string symbolListCommand() {
     return "lss";
 }
 
+std::string exitCommand() {
+    return "exit";
+}
+
+
 
 
 /* Messages */

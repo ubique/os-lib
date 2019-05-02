@@ -11,6 +11,8 @@ std::string selectPluginCommand();
 
 std::string symbolListCommand();
 
+std::string exitCommand();
+
 std::string pluginListMessage(size_t listSize);
 
 std::string symbolListMessage(size_t listSize);
