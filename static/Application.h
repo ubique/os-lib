@@ -26,7 +26,7 @@ private:
 
     std::vector<std::string> getSymbolList(const std::string& plugin);
 
-    std::string runPluginFunc(const std::string& pluginName, const std::string& pluginFunc, const std::string& arg);
+    void runPluginFunc(const std::string& pluginName, const std::string& pluginFunc);
 
     void procPluginList();
 

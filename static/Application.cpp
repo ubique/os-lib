@@ -68,13 +68,9 @@ void Application::procPluginList() {
 
 
 void Application::procRun() {
-    string symbol, arg;
+    string symbol;
     cin >> symbol;
-    cout << runMessage() << endl;
-    getline(cin, arg);
-    getline(cin, arg);
-    cout << resultMessage() << endl;
-    cout << runPluginFunc(selectedPlugin, symbol, arg) << endl;
+    runPluginFunc(selectedPlugin, symbol);
 }
 
 
@@ -118,6 +114,7 @@ std::vector<std::string> Application::getPluginList() {
     return result;
 }
 
+
 std::vector<std::string> Application::getSymbolList(const std::string &pluginName) {
     string pluginPath = pluginDir + "/" + pluginName;
 
@@ -127,9 +124,8 @@ std::vector<std::string> Application::getSymbolList(const std::string &pluginNam
     return res;
 }
 
-std::string Application::runPluginFunc(const std::string &pluginName,
-                                       const std::string &pluginFunc,
-                                       const std::string &arg) {
+void Application::runPluginFunc(const std::string &pluginName,
+                                       const std::string &pluginFunc) {
     string pluginPath = pluginDir + "/" + pluginName;
 
     void *handle = dlopen(pluginPath.c_str(), RTLD_LAZY);
@@ -147,10 +143,17 @@ std::string Application::runPluginFunc(const std::string &pluginName,
         throw ApplicationException(dlsymError(pluginName, pluginFunc, error));
     }
 
+    string arg;
+    cout << runMessage() << endl;
+    getline(cin, arg);
+    getline(cin, arg);
+
     auto res = func(arg.c_str());
-    string resStr = res;
+
+    cout << resultMessage() << endl;
+    cout << res << endl;
+
     delete[] res;
 
     dlclose(handle);
-    return resStr;
 }
