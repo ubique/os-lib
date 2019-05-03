@@ -43,6 +43,8 @@ int Application::run() {
                 procSymbolList();
             } else if (command == exitCommand()) {
                 break;
+            } else {
+                cerr << commandNotFound(command) << endl;
             }
         } catch (ApplicationException const &exception) {
             cerr << errorMessage() << exception.what() << endl;
@@ -70,6 +72,11 @@ void Application::procPluginList() {
 void Application::procRun() {
     string symbol;
     cin >> symbol;
+
+    if (selectedPlugin.empty()) {
+        throw ApplicationException(pluginNotSelectedError());
+    }
+
     runPluginFunc(selectedPlugin, symbol);
 }
 
@@ -125,7 +132,7 @@ std::vector<std::string> Application::getSymbolList(const std::string &pluginNam
 }
 
 void Application::runPluginFunc(const std::string &pluginName,
-                                       const std::string &pluginFunc) {
+                                const std::string &pluginFunc) {
     string pluginPath = pluginDir + "/" + pluginName;
 
     void *handle = dlopen(pluginPath.c_str(), RTLD_LAZY);
@@ -135,8 +142,8 @@ void Application::runPluginFunc(const std::string &pluginName,
 
     dlerror();
 
-    const char* (*func)(const char*);
-    func = (const char* (*)(const char*)) dlsym(handle, pluginFunc.c_str());
+    const char *(*func)(const char *);
+    func = (const char *(*)(const char *)) dlsym(handle, pluginFunc.c_str());
 
     auto error = dlerror();
     if (error != nullptr) {

@@ -73,3 +73,11 @@ std::string dlopenError(const std::string &plugin, const std::string &message) {
 std::string dlsymError(const std::string &plugin, const std::string &symbol, const std::string &message) {
     return "Symbol \'" + symbol + "\' not found in plugin \'" + plugin + "\'.\n" + message;
 }
+
+std::string commandNotFound(const std::string &command) {
+    return "Command \'" + command + "\' not found.";
+}
+
+std::string pluginNotSelectedError() {
+    return "Plugins wasn't selected.";
+}

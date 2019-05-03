@@ -36,3 +36,7 @@ std::string dlopenError(const std::string &plugin, const std::string &message);
 std::string dlsymError(const std::string &plugin,
                        const std::string &symbol,
                        const std::string &message);
+
+std::string commandNotFound(const std::string& command);
+
+std::string pluginNotSelectedError();
