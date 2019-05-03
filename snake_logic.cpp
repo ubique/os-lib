@@ -26,11 +26,11 @@ void left(int cnt) {
 }
 
 void print_food() {
-    std::cout << "\033[1;33m" << "*" << "\033[0m" << std::flush;
+    std::cout << "\033[1;33m" << "*" << "\033[0m" << std::flush; // Bright yellow
 }
 
 void print_snake() {
-    std::cout << "\033[1;32m" << "*" << "\033[0m" << std::flush;
+    std::cout << "\033[1;32m" << "*" << "\033[0m" << std::flush; // Bright green
 }
 
 void fix_element(int max_y, int x, int y, void(*printer)()) {
@@ -69,7 +69,7 @@ Snake make_world(int max_x, int max_y) {
     return snake;
 }
 
-bool game_logic(Snake &snake) {
+int game_logic(Snake &snake) {
     if (snake.is_hungry()) {
         auto e = snake.pop_last();
         fix_element(snake.get_max_y(), e.x, e.y, [] { std::cout << ' ' << std::flush; });
@@ -95,15 +95,19 @@ bool game_logic(Snake &snake) {
     }
 
     if (h.x <= 0 || h.x >= snake.get_max_x() * 2 || h.y <= 0 || h.y >= snake.get_max_y()) {
-        return true;
+        return 1;
     }
 
     if (!snake.add(h)) {
-        return true;
+        return 1;
     }
 
     if (Snake::Pos{h.x, h.y} == snake.where_food()) {
         snake.make_full();
+
+        if (snake.get_length() == (snake.get_max_x() - 2) * (snake.get_max_y() - 2)) {
+            return 2;
+        }
 
         snake.gen_food();
         auto food = snake.where_food();
@@ -113,5 +117,5 @@ bool game_logic(Snake &snake) {
 
     fix_element(snake.get_max_y(), h.x, h.y, &print_snake);
 
-    return false;
+    return 0;
 }

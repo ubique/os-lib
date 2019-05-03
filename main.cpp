@@ -22,9 +22,9 @@ void make_big(int &max_x, int &max_y);
 
 Snake make_world(int max_x, int max_y);
 
-bool game_logic(Snake &snake);
+int game_logic(Snake &snake);
 
-void print_err(std::string message) {
+void print_err(const std::string &message) {
     std::cerr << "\033[31m" << message << "\033[0m" << std::endl;
 }
 
@@ -32,7 +32,7 @@ void print_dll_err() {
     print_err(dlerror());
 }
 
-void sleep_millisec(int x) {
+void sleep_milliseconds(int x) {
     std::this_thread::sleep_for(std::chrono::milliseconds(x));
 }
 
@@ -61,9 +61,9 @@ private:
     termios def, dis;
 };
 
-struct Dll_connector {
+struct Dll_binder {
 
-    Dll_connector() : handle(dlopen("./libsecond_shared.so", RTLD_LAZY)), correct_handle(true) {
+    Dll_binder() : handle(dlopen("./libsecond_shared.so", RTLD_LAZY)), correct_handle(true) {
         if (handle == nullptr) {
             correct_handle = false;
             print_dll_err();
@@ -74,7 +74,7 @@ struct Dll_connector {
         return correct_handle;
     }
 
-    bool execute_func(std::string func_name) {
+    bool execute_func(const std::string &func_name) {
         if (handle != nullptr) {
             auto fun = dlsym(handle, func_name.c_str());
             if (fun == nullptr) {
@@ -88,7 +88,7 @@ struct Dll_connector {
         }
     }
 
-    ~Dll_connector() {
+    ~Dll_binder() {
         if (handle != nullptr) {
             if (dlclose(handle) != 0) {
                 print_dll_err();
@@ -112,12 +112,11 @@ int main(int argc, char **argv) {
     }
 
     std::string arg;
-
     if (argc == 2) {
         arg = argv[1];
     }
 
-    Dll_connector dc;
+    Dll_binder dc;
     if (!dc.ready_for_use()) {
         return EXIT_FAILURE;
     }
@@ -139,33 +138,42 @@ int main(int argc, char **argv) {
         } else if (arg == "-b") {
             make_big(max_x, max_y);
         } else if (arg != "-s") {
-            print_err("Incoorect argument");
+            print_err("Incorrect argument");
             return EXIT_FAILURE;
         }
+    }
+
+    if (!dc.execute_func("print_welcome")) {
+        return EXIT_FAILURE;
     }
 
     Echo_disable ed;
     Snake snake = make_world(max_x, max_y);
 
     auto c = getchar();
-    if (c == 'q' || c == 'Q') {
+
+    if (c == 'q' || c == 'Q' || c == 4 /*Ctrl+D*/) {
         return EXIT_SUCCESS;
     }
 
     while (true) {
-        sleep_millisec(150);
+        sleep_milliseconds(150);
         if (ed.clicked()) {
-            char c = getchar();
-            if (c == 'q' || c == 'Q') {
+            c = getchar();
+            if (c == 'q' || c == 'Q' || c == 4 /*Ctrl+D*/) {
                 break;
             }
 
             if (c == 'p' || c == 'P') {
                 while (true) {
                     c = getchar();
-                    if (c == 'p' || c == 'P') {
+                    if (c == 'p' || c == 'P' || c == 'q' || c == 'Q' || c == 4) {
                         break;
                     }
+                }
+
+                if (c == 'q' || c == 'Q' || c == 4 /*Ctrl+D*/) {
+                    break;
                 }
             }
 
@@ -178,7 +186,6 @@ int main(int argc, char **argv) {
                     snake.set_direction(Snake::Direction::DOWN);
                 }
             } else {
-
                 if (c == 'a' || c == 'A') {
                     snake.set_direction(Snake::Direction::LEFT);
                 }
@@ -189,9 +196,22 @@ int main(int argc, char **argv) {
             }
         }
 
-        if (game_logic(snake)) {
+        auto res = game_logic(snake);
+
+        if (res == 1) {
+            if (!dc.execute_func("print_game_over")) {
+                return EXIT_FAILURE;
+            }
             break;
         }
+
+        if (res == 2) {
+            if (!dc.execute_func("print_win")) {
+                return EXIT_FAILURE;
+            }
+            break;
+        }
+
     }
 
     return EXIT_SUCCESS;

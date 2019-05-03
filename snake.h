@@ -18,6 +18,14 @@ struct Snake {
         int st_x = rg.get_random_x();
         int st_y = rg.get_random_y();
 
+        while (st_x < 3 && st_x > max_x - 3) {
+            st_x = rg.get_random_x();
+        }
+
+        while (st_y < 3 && st_y > max_y - 3) {
+            st_y = rg.get_random_y();
+        }
+
         add({st_x, st_y});
         add({st_x - 2, st_y});
 
@@ -47,7 +55,7 @@ struct Snake {
 
     struct Random_generator {
 
-        Random_generator(int max_x, int max_y) : gen(rd()), x_dis(3, max_x - 3), y_dis(3, max_y - 3) {}
+        Random_generator(int max_x, int max_y) : gen(rd()), x_dis(1, max_x - 1), y_dis(1, max_y - 1) {}
 
         int get_random_x() {
             return x_dis(gen) * 2;
@@ -135,6 +143,10 @@ struct Snake {
 
     int get_max_y() {
         return max_y;
+    }
+
+    int get_length() {
+        return snake_set_pos.size();
     }
 
 private:
