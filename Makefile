@@ -3,7 +3,7 @@ EXECUTABLE = lib
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): main.o static dynamicLinked dynamicLoaded
-	g++ main.o -L. -ldigitsSum -L. -lgcd -ldl -o $@
+	g++ main.o -L. -ldigitsSum -L. -lgcd  -Wl,-rpath,. -ldl -o $@
 
 static: digitsSum.o
 	ar rcs libdigitsSum.a $<
