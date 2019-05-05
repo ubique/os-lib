@@ -2,7 +2,6 @@
 #include <dlfcn.h>
 #include "static/multiplication.h"
 #include "firstDynamic/logarithm.h"
-#include "secondDynamic/exponentiation.h"
 
 using namespace std;
 
@@ -13,7 +12,7 @@ int main() {
     cin >> a >> b;
     cout << "a * b = " << getMult(a, b) << endl;
     cout << "log(a) / log(b) = " << getLog(a, b) << endl;
-    lib = dlopen("secondDynamic.so", RTLD_LAZY);
+    lib = dlopen("out/libsecondDynamic.so", RTLD_LAZY);
     if (lib == nullptr) {
         cout << dlerror() << endl;
         exit(1);
