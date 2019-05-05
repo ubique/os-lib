@@ -6,7 +6,7 @@ $(info $(shell mkdir -p $(BUILD)))
 .PHONY: clean run
 
 $(BUILD)/ldupes-run: ldupes-run.c $(BUILD)/libldupes.a $(BUILD)/libsize-to-str.so
-	cc -O2 -o $@ $< -L $(BUILD) -l ldupes -l size-to-str -l vendor -l dl
+	cc -O2 -o $@ $< -L $(BUILD) -l ldupes -l size-to-str -l vendor -l dl -Wl,-rpath,$(BUILD)
 
 $(BUILD)/libldupes.a: $(BUILD)/libvendor.so $(LDUPES_OBJECTS)
 	ar rcs $@ $(LDUPES_OBJECTS)
