@@ -10,7 +10,7 @@ DYNAMIC_LIB = lib$(DYNAMIC).so
 LOADED_LIB = lib$(LOADED).so
 
 main: $(MAIN).o staticLib dynamicLib loadedLib
-	g++ $(MAIN).o -L. -l$(STATIC) -L. -l$(DYNAMIC) -ldl -o $@
+	g++ $(MAIN).o -L. -l$(STATIC) -L. -l$(DYNAMIC) -Wl,-rpath,. -ldl -o $@
 	
 staticLib: $(STATIC).o
 	ar rcs $(STATIC_LIB) $<
