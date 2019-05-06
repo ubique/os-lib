@@ -3,10 +3,13 @@ OUT_PATH=lib
 
 CXX=g++ -std=c++14
 
-all: main
+all: out main
+
+out:
+	mkdir $(OUT_PATH)
 
 clean:
-	rm main *.o lib/*
+	rm main *.o & rm -rf lib
 
 # executable
 
