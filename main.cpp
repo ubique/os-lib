@@ -62,5 +62,8 @@ int main() {
             cout << "Segments have zero or more than one common points\n";
         }
     }
+    if (dlclose(libintersections) != 0) {
+        cerr << "Couldn't close libintersections.so: " << dlerror() << '\n';
+    }
     return 0;
 }
