@@ -1,6 +1,6 @@
-#ifndef TEST_STATIC
-#define TEST_STATIC
+#ifndef TEST_STATIC_H
+#define TEST_STATIC_H
 
 void test_static();
 
-#endif TEST_STATIC
+#endif //TEST_STATIC_H
