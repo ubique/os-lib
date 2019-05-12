@@ -11,7 +11,7 @@
 #include <limits>
 #include <cstring>
 
-#include <huffman.h>
+#include "huffman.h"
 
 namespace {
 
