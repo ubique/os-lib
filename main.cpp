@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	const auto dl = dl_guard("huffman.so", RTLD_LAZY);
+	const auto dl = dl_guard("libhuffman.so", RTLD_LAZY);
 	if (dl.get_handle() == nullptr) {
 		std::cerr << dlerror() << std::endl;
 		return EXIT_FAILURE;
