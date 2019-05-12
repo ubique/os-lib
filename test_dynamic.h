@@ -1,6 +1,6 @@
-#ifndef TEST_DYNAMIC
-#define TEST_DYNAMIC
+#ifndef TEST_DYNAMIC_H
+#define TEST_DYNAMIC_H
 
 void test_dynamic();
 
-#endif TEST_DYNAMIC
+#endif //TEST_DYNAMIC_H
