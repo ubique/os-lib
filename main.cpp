@@ -25,4 +25,9 @@ int main() {
     std::cout << hello_world_static() << std::endl;
     std::cout << hello_world_dynamic1() << std::endl;
     std::cout << hello_world_dynamic2() << std::endl;
+
+    if (dlclose(dynamic_lib) != 0) {
+        std::cout << "Error while closing dynamic library: " + std::string(dlerror()) << std::endl;
+        return EXIT_FAILURE;
+    }
 }
