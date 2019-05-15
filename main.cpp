@@ -40,8 +40,10 @@ int main() {
 
     std::cout << "The first library says: ";
     my_static_lib::greet();
+    std::cout << std::endl;
     std::cout << "The second library says: ";
     my_first_dynamic_lib::greet();
+    std::cout << std::endl;
 
     dl_descriptor descriptor("libdyn2.so");
 
