@@ -45,7 +45,13 @@ int main() {
 
     dl_descriptor descriptor("libdyn2.so");
 
-    std::cout << "The third library says: ";
-    auto func_ptr = reinterpret_cast<void (*)()>(descriptor.get_function_ptr("greet"));
-    func_ptr();
+    if (descriptor.loaded()) {
+        std::cout << "The third library says: ";
+        auto func_ptr = reinterpret_cast<void (*)()>(descriptor.get_function_ptr("greet"));
+        if (func_ptr == nullptr) {
+            std::cout << "Couldn't get pointer to required function: " << dlerror() << std::endl;
+        } else {
+            func_ptr();
+        }
+    }
 }
