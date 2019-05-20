@@ -22,5 +22,6 @@ int main() {
     
     auto func = reinterpret_cast<void(*)()>(getFunctionPointer(dynamic_lib,"hello"));
     func();
+    dlclose(dynamic_lib);
     return 0;
 }
