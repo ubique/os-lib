@@ -16,13 +16,13 @@ int main() {
     printBinary(base);
     std::cout << "Dynamic:\n" << setBit(base, 1) << std::endl;
 
-    auto lib = dlopen("libdynlink.so", RTLD_LAZY);
+    void* lib = dlopen("libdynlink.so", RTLD_LAZY);
     if (lib) {
-        auto function = (ui (*)(ui)) (dlsym(lib, "shift"));
+        auto rShift = (ui (*)(ui)) (dlsym(lib, "myShiftFunction"));
         char* error;
         if ((error = dlerror()) == nullptr) {
             std::cout << "Dynamic linking:\n";
-            std::cout << function(base) << std::endl;
+            std::cout << rShift(base) << std::endl;
 
 
             if (dlclose(lib) != 0) {
